@@ -10,7 +10,11 @@
   },
   "devDependencies": {
     "@nuxtjs/supabase": "^1.0.2",
+    "@nuxtjs/tailwindcss": "^6.8.0",
     "@types/node": "^18.17.1",
     "nuxt": "^3.6.5"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.11"
   }
 }

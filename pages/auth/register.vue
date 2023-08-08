@@ -1,8 +1,13 @@
 <template>
-  <div>
-    <form @submit.prevent="handleRegister">
+  <div class="py-32">
+    <form
+      @submit.prevent="auth.register({ email, password })"
+      class="flex flex-col max-w-3xl mx-auto p-4 rounded-md bg-slate-100 gap-4"
+    >
+    <h1 class="text-xl font-semibold">Register</h1>
       <input
         v-model="email"
+        class="rounded-md p-2"
         type="email"
         name="email"
         id="email"
@@ -10,6 +15,7 @@
       />
       <input
         v-model="password"
+        class="rounded-md p-2"
         type="password"
         name="password"
         id="password"
@@ -24,19 +30,8 @@
 const email = ref("");
 const password = ref("");
 
-const handleRegister = async () => {
-  console.log("register");
-  const user = {
-    email: email.value,
-    password: password.value,
-  };
-  const data = await useFetch("/api/auth/register", {
-    method: "POST",
-    headers: useRequestHeaders(["cookie"]),
-    body: JSON.stringify(user),
-  });
-  console.log(data);
-};
+const auth = useAuthStore();
+
 </script>
 
 <style scoped></style>

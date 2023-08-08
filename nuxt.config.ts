@@ -1,12 +1,24 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // devtools: { enabled: true }
-  modules: ["@nuxtjs/supabase"],
+  modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
+  pinia: {
+    autoImports: ["storeToRefs", "defineStore"],
+  },
+  imports: {
+    dirs: ["stores", "data"],
+  },
+  runtimeConfig: {
+    public: {
+      NODE_ENV: "development"
+    },
+    TESTING_USERNAME: process.env.TESTING_USERNAME,
+    TESTING_PASSWORD: process.env.TESTING_PASSWORD,
+  },
   supabase: {
     redirectOptions: {
-      login: "/login",
-      callback: "/protected",
-      exclude: ["/"],
+      login: "/auth/login",
+      callback: "/protected/create-users",
+      exclude: ["/auth/**"],
     },
     cookieOptions: {
       maxAge: 60 * 60 * 8,

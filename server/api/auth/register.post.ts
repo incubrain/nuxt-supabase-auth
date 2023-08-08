@@ -1,13 +1,14 @@
 export default defineEventHandler(async (event) => {
-  console.log("register", event);
-  const { supabaseClient } = event.context;
-  console.log("register client", supabaseClient);
-  const body = readBody(event);
+  const { _supabaseClient } = event.context;
+  console.log("register");
+  const body = await readBody(event);
   const { email, password } = body;
-  const { data, error } = await supabaseClient.auth.registerWithPassword({
+  console.log("register", email, password, body);
+  const { data, error } = await _supabaseClient.auth.signUp({
     email,
     password,
   });
+  console.log("register", data, error);
   if (error) {
     throw createError({
       statusCode: 401,
