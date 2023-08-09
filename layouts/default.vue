@@ -15,6 +15,12 @@
         {{ route.path }}
       </NuxtLink>
       <button
+        @click="auth.register"
+        class="p-2 rounded-md bg-emerald-500 text-white"
+      >
+        register
+      </button>
+      <button
         @click="auth.login"
         class="p-2 rounded-md bg-emerald-500 text-white"
       >
@@ -26,15 +32,15 @@
       >
         logout
       </button>
-      <button
-        @click="auth.getSession"
-        class="p-2 rounded-md bg-emerald-500 text-white"
-      >
-        session
-      </button>
+      <p class="p-2 rounded-md bg-emerald-500 text-white">
+        Logged in: {{ session !== null }}
+      </p>
     </div>
-    <div class="fixed bottom-2 left-2 rounded-md bg-emerald-500 px-4 py-2">
-      <p class="text-white font-bold">user: {{ user }}</p>
+    <div
+      class="fixed bottom-2 left-2 rounded-md bg-emerald-500 flex flex-col gap-8 px-4 py-2 max-w-[80vw]"
+    >
+      <p class="text-white font-bold">User: {{ user }}</p>
+      <p class="text-white font-bold">Session: {{ session }}</p>
     </div>
     <slot />
   </div>
@@ -44,7 +50,7 @@
 const router = useRouter();
 
 const auth = useAuthStore();
-const { user } = storeToRefs(auth);
+const { user, session } = storeToRefs(auth);
 </script>
 
 <style scoped></style>

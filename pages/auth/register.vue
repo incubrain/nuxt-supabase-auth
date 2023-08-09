@@ -27,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+// !TODO: add form validation
+// !TODO: add feedback for register errors
 const email = ref("");
 const password = ref("");
 
