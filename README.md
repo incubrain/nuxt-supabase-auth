@@ -22,3 +22,8 @@
 - [ ]  **Monitor and Log**: Implement monitoring and logging to detect suspicious activities early. This includes failed login attempts, unexpected location changes, etc.
 
 - [ ]  **Provide Clear Logout Functionality**: Implement proper logout functionality that not only removes the client-side session but also invalidates the token server-side.
+
+
+## Of Note:
+
+- Currently, onAuthStateChange() does not work across tabs. For instance, in the case of a password reset flow, the original tab which requested for the password reset link will not receive the SIGNED_IN and PASSWORD_RECOVERY event when the user clicks on the link. This will also impact how we handle email verification clicks [reference](https://supabase.com/docs/reference/javascript/auth-onauthstatechange)

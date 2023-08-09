@@ -1,3 +1,5 @@
+import { userSchema, sessionSchema } from "@/types/auth";
+
 export default defineEventHandler(async (event) => {
   const { _supabaseClient } = event.context;
   // console.log("login client", _supabaseClient);
@@ -12,18 +14,35 @@ export default defineEventHandler(async (event) => {
   const { data, error } = await _supabaseClient.auth.signInWithPassword({
     email,
     password,
+    options: {
+      emailRedirectTo: "http://localhost:3000/protected/create-users",
+    },
   });
+  console.log("login Data", data, error);
   if (error) {
     throw createError({
-      statusCode: 401,
-      message: error.message,
+      statusText: `Error logging in user: ${error}`,
+      status: error.status,
     });
+  }
+
+  const validatedUser = userSchema.safeParse(data.user);
+  if (!validatedUser.success) {
+    // Handle validation error
+    throw createError(validatedUser.error);
+  }
+
+  const validatedSession = sessionSchema.safeParse(data.session);
+  if (!validatedSession.success) {
+    throw createError(validatedSession.error);
   }
 
   console.log("login client", data);
   return {
     status: 200,
-    user: data.user,
-    session: data.session,
+    data: {
+      user: validatedUser.data,
+      session: validatedSession.data,
+    },
   };
 });
