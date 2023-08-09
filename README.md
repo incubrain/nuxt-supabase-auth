@@ -1,63 +1,24 @@
-# Nuxt 3 Minimal Starter
+# Nuxt 3 Supabase Auth
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## TODO:
 
-## Setup
+- [ ] **Use HttpOnly Cookies**: If possible, set the `HttpOnly` flag on cookies that store sensitive information. This makes the cookie inaccessible to JavaScript running on the page, which can help prevent cross-site scripting (XSS) attacks.
 
-Make sure to install the dependencies:
+- [ ] **Set Secure Cookies**: When setting cookies, use the `Secure` flag to ensure that cookies are only sent over HTTPS connections.
 
-```bash
-# npm
-npm install
+- [ ] **Implement CSRF Protection**: Cross-Site Request Forgery (CSRF) attacks can occur when handling cookies. Implementing CSRF tokens and checking them server-side can mitigate this risk.
 
-# pnpm
-pnpm install
+- [ ] **Set Proper CORS Policy**: Make sure you have a proper Cross-Origin Resource Sharing (CORS) policy in place to control which domains are allowed to access your resources.
 
-# yarn
-yarn install
-```
+- [ ] **Use a Trusted Library**: If you are dealing with JWT or other token formats, consider using a well-maintained and trusted library to handle token parsing, validation, and storage.
 
-## Development Server
+- [ ] **Avoid Storing Tokens in LocalStorage**: While it might be tempting to store tokens in `localStorage`, it's not recommended due to potential access from XSS attacks. Cookies with proper flags (HttpOnly, Secure) are generally safer.
 
-Start the development server on `http://localhost:3000`:
+- [ ] **Implement Token Expiry**: Make sure that tokens have a short expiration time and implement refresh tokens if necessary. This minimizes the potential damage of a token if it's compromised.
+- [ ] **Token Validation**: Always validate tokens server-side before processing the request. Client-side validation can be bypassed by an attacker.
 
-```bash
-# npm
-npm run dev
+- [ ] **Handle Redirection Securely**: If you're redirecting users after login, ensure that the redirection URLs are validated and don't allow open redirection, which can be used in phishing attacks.
 
-# pnpm
-pnpm run dev
+- [ ]  **Monitor and Log**: Implement monitoring and logging to detect suspicious activities early. This includes failed login attempts, unexpected location changes, etc.
 
-# yarn
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- [ ]  **Provide Clear Logout Functionality**: Implement proper logout functionality that not only removes the client-side session but also invalidates the token server-side.
