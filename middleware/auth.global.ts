@@ -1,12 +1,37 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  console.log("protected", to, from);
-  // const nuxtApp = useNuxtApp();
+  const { $supabase } = useNuxtApp();
+  const client: SupabaseClient = $supabase.client;
   const auth = useAuthStore();
-  // const isAuthenticated = await auth.getSession()
-  const { user } = storeToRefs(auth);
-  const isAuthenticated = user.value?.aud === "authenticated" ? true : false;
-  if (!isAuthenticated && to.path.includes("protected")) {
-    console.log("isNotAuthenticated", isAuthenticated);
+
+  // if the user is authenticated, don't do anything
+  console.log("auth.isAuthenticated", auth.isAuthenticated);
+  if (auth.isAuthenticated) return;
+
+  // if no tokens and protectd route, navigate to login
+  if (!auth.hasTokens && auth.isProtectedRoute(to.fullPath)) {
+    console.log("No tokens, navigate to login");
+    return navigateTo("/auth/login");
+  }
+
+  // handle first time login
+  if (auth.isFirstLogin) {
+    console.log("first login, setSession");
+    await auth.setSession(client);
+    return navigateTo("/protected/create-users");
+  }
+
+  // if the cookie session has NOT expired, set the session
+  if (!auth.hasSessionExpired) {
+    console.log("Session available, call setSession");
+    await auth.setSession(client);
+    return;
+  }
+
+  // finally, if no session cookies exists, force user to login
+  if (!auth.isAuthenticated && to.fullPath.includes("protected")) {
+    console.log("No session, navigate to login");
     return navigateTo("/auth/login");
   }
 });
