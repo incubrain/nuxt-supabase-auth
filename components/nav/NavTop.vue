@@ -15,7 +15,7 @@
     <UButton to="/auth/register"> register </UButton>
     <UButton to="/auth/login"> login </UButton>
     <UButton @click="auth.logout"> logout </UButton>
-    <p>Logged in: {{ session !== null }}</p>
+    <p>Logged in: {{ auth.hasSession }}</p>
   </div>
 </template>
 
@@ -23,7 +23,7 @@
 const router = useRouter();
 
 const auth = useAuthStore();
-const { user, session } = storeToRefs(auth);
+const { user } = storeToRefs(auth);
 </script>
 
 <style scoped></style>

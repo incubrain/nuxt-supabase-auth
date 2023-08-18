@@ -12,9 +12,9 @@ export default defineNuxtConfig({
       BASE_URL: process.env.BASE_URL,
       SUPABASE_KEY: process.env.SUPABASE_KEY,
       SUPABASE_URL: process.env.SUPABASE_URL,
+      TESTING_USERNAME: process.env.TESTING_USERNAME,
+      TESTING_PASSWORD: process.env.TESTING_PASSWORD,
+      TEST_MODE: process.env.TEST_MODE,
     },
-    TESTING_USERNAME: process.env.TESTING_USERNAME,
-    TESTING_PASSWORD: process.env.TESTING_PASSWORD,
-    TEST_MODE: process.env.TEST_MODE,
   },
 });

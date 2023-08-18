@@ -4,12 +4,11 @@
     <FormDynamic
       :schema="schema"
       :validation-schema="LoginForm"
+      button-label="Sign In"
       has-labels
       class="w-full"
       @submit-form="auth.login"
-    >
-      <FormButton> Sign In </FormButton>
-    </FormDynamic>
+    />
     <!-- <p class="mt-4 text-sm text-center">
       <NuxtLink to="/auth/forgot-password"> Forgot Password? </NuxtLink>
     </p> -->
@@ -87,7 +86,7 @@ watch(
         type: String(extractFromHash("type")),
       };
       auth.updateSession(session);
-      router.push("/astrotribe");
+      router.push("/protected/create-users");
     }
   },
   { immediate: true }

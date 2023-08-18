@@ -14,11 +14,12 @@ import {
 export default defineStore("auth", () => {
   // !TODO: add isAdmin check
   const AUTHENTICATED_AUD = "authenticated";
-  const PROTECTED_ROUTE = "astrotribe";
+  const PROTECTED_ROUTE = "protected";
 
   const router = useRouter();
   const env = useRuntimeConfig().public;
-  const client: SupabaseClient = useNuxtApp().$supabase;
+  const { $supabase } = useNuxtApp();
+  const client: SupabaseClient = $supabase;
 
   const user = ref<UserType | EmailUnvalidatedUserType | null>(null);
   const session = ref<SessionType | null>(null);
@@ -108,6 +109,7 @@ export default defineStore("auth", () => {
   };
 
   const updateData = (data: AuthType) => {
+    console.log("updateData");
     updateUser(data.user);
     updateSession(data.session);
   };
@@ -119,6 +121,8 @@ export default defineStore("auth", () => {
     email: string;
     password: string;
   }) => {
+    console.log("login", email, password);
+
     const { data, error } = await client.auth.signInWithPassword({
       email,
       password,
@@ -140,7 +144,7 @@ export default defineStore("auth", () => {
     }
 
     updateData({ user: validatedUser.data, session: validatedSession.data });
-    router.push("/astrotribe/users");
+    router.push("/protected/create-users");
   };
 
   async function handleInvalidEmailLink(userEmail: string) {
@@ -165,16 +169,18 @@ export default defineStore("auth", () => {
 
   async function setSession(): Promise<boolean> {
     // Update the session expiration time in your cookies if available from the auth response
+    console.log("setSession", client.auth);
     const { data, error } = await client.auth.setSession({
       refresh_token: refreshToken.value!,
       access_token: accessToken.value!,
     });
+    console.log("setSessionErr", data, error);
     if (error) throw createError({ message: error.message, statusCode: 401 });
-    const validatedData = authSchema.parse(data);
-    if (!validatedData) {
+    const validatedData = authSchema.safeParse(data);
+    if (!validatedData.success) {
       throw createError({ message: "Invalid session data", statusCode: 401 });
     }
-    updateData(validatedData);
+    updateData(validatedData.data);
     return true;
   }
 

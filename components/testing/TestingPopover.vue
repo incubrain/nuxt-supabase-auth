@@ -1,5 +1,5 @@
 <template>
-  <div v-if="testingEnabled" class="absolute bottom-2 right-2-2 z-50">
+  <div v-if="testingEnabled" class="absolute bottom-2 right-2 z-50">
     <UPopover>
       <UButton
         color="white"
