@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
+  modules: ["@pinia/nuxt", "@nuxthq/ui"],
   pinia: {
     autoImports: ["storeToRefs", "defineStore"],
   },
@@ -9,27 +9,12 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      NODE_ENV: "development"
+      BASE_URL: process.env.BASE_URL,
+      SUPABASE_KEY: process.env.SUPABASE_KEY,
+      SUPABASE_URL: process.env.SUPABASE_URL,
     },
     TESTING_USERNAME: process.env.TESTING_USERNAME,
     TESTING_PASSWORD: process.env.TESTING_PASSWORD,
-  },
-  supabase: {
-    redirectOptions: {
-      login: "/auth/login",
-      callback: "/protected/create-users",
-      exclude: ["/auth/**"],
-    },
-    cookieOptions: {
-      maxAge: 60 * 60 * 8,
-      sameSite: "lax",
-      secure: true,
-    },
-    auth: {
-      flowType: "pkce",
-      detectSessionInUrl: true,
-      persistSession: true,
-      autoRefreshToken: true,
-    },
+    TEST_MODE: process.env.TEST_MODE,
   },
 });

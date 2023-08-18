@@ -6,21 +6,26 @@ import {
   AuthType,
   SimpleUserType,
   EmailUnvalidatedUserType,
+  emailUnvalidatedUserSchema,
+  sessionSchema,
+  userSchema,
 } from "@/types/auth";
 
 export default defineStore("auth", () => {
   // !TODO: add isAdmin check
-  // !TODO: add isAdmin check
   const AUTHENTICATED_AUD = "authenticated";
-  const PROTECTED_ROUTE = "protected";
+  const PROTECTED_ROUTE = "astrotribe";
 
   const router = useRouter();
+  const env = useRuntimeConfig().public;
+  const client: SupabaseClient = useNuxtApp().$supabase;
+
   const user = ref<UserType | EmailUnvalidatedUserType | null>(null);
   const session = ref<SessionType | null>(null);
-  // !TODO: add types for createdUsers
   const createdUsers = ref([] as SimpleUserType[]);
 
   // !TODO: add types for cookies
+  // !TODO: check if supabase handles cookies for us
   const accessToken = useCookie("access_token");
   const refreshToken = useCookie("refresh_token");
   const expiresIn = useCookie("expires_in", {
@@ -30,19 +35,18 @@ export default defineStore("auth", () => {
     decode: (value) => Number(value),
   }) as Ref<number | null>;
 
-  const createUsers = async () => {
-    console.log("register");
+  // const createUsers = async () => {
+  //   console.log('register')
 
-    const { data } = await useFetch("/api/protected/register-many-users", {
-      method: "POST",
-      headers: useRequestHeaders(["cookie"]),
-      body: JSON.stringify({}),
-    });
-    console.log(data);
-    if (!data.value)
-      throw createError({ message: "No Register data", statusCode: 401 });
-    createdUsers.value = data.value.users;
-  };
+  //   const { data } = await useFetch('/api/admin/register-many-users', {
+  //     method: 'POST',
+  //     headers: useRequestHeaders(['cookie']),
+  //     body: JSON.stringify({})
+  //   })
+  //   console.log(data)
+  //   if (!data.value) throw createError({ message: 'No Register data', statusCode: 401 })
+  //   createdUsers.value = data.value.users
+  // }
 
   const register = async ({
     email,
@@ -51,19 +55,23 @@ export default defineStore("auth", () => {
     email: string;
     password: string;
   }) => {
-    console.log("register");
-
-    const { data, error } = await useFetch("/api/auth/register", {
-      method: "POST",
-      headers: useRequestHeaders(["cookie"]),
-      body: JSON.stringify({ email, password }),
+    console.log("register", email, password, `${env.BASE_URL}/auth/login`);
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${env.BASE_URL}/auth/login`,
+      },
     });
-    if (error.value)
-      throw createError(`Error registering user: ${error.value}, statusCode: ${error.value.statusCode}`);
-    if (!data.value)
-      throw createError({ message: "No Register data", statusCode: 401 });
-    user.value = data.value.data.user;
-    router.push("/auth/confirm");
+    if (error) throw createError(`Error registering user: ${error}`);
+    console.log("register", data);
+    const validatedUser = emailUnvalidatedUserSchema.safeParse(data.user);
+    if (!validatedUser.success) {
+      throw createError(validatedUser.error);
+    }
+
+    user.value = validatedUser.data;
+    router.push("/auth/success");
   };
 
   const clearUserData = () => {
@@ -76,31 +84,26 @@ export default defineStore("auth", () => {
   };
 
   const logout = async () => {
-    const data = await useFetch("/api/auth/logout");
-    console.log("user logged out client", data);
+    const { error } = await client.auth.signOut();
+    if (error) {
+      throw createError({
+        statusCode: 401,
+        message: error.message,
+      });
+    }
     clearUserData();
     router.push("/auth/login");
   };
 
-  const updateSession = async (newSession: SessionType) => {
-    console.log("updateSession");
+  const updateSession = (newSession: SessionType) => {
     session.value = newSession;
     accessToken.value = newSession.access_token;
     refreshToken.value = newSession.refresh_token;
     expiresAt.value = Number(newSession.expires_at);
     expiresIn.value = Number(newSession.expires_in);
-    console.log(
-      "updateSession",
-      session.value,
-      accessToken.value,
-      refreshToken.value,
-      expiresAt.value,
-      expiresIn.value
-    );
   };
 
-  const updateUser = async (data: UserType) => {
-    console.log("updateUser");
+  const updateUser = (data: UserType) => {
     user.value = data;
   };
 
@@ -113,28 +116,55 @@ export default defineStore("auth", () => {
     email,
     password,
   }: {
-    email?: string;
-    password?: string;
+    email: string;
+    password: string;
   }) => {
-    console.log("login", email, password);
-    const { data, error } = await useFetch("/api/auth/login", {
-      method: "POST",
-      headers: useRequestHeaders(["cookie"]),
-      body: JSON.stringify({ email, password }),
+    const { data, error } = await client.auth.signInWithPassword({
+      email,
+      password,
     });
+    if (error) {
+      throw createError(`Login Error: ${error}`);
+    }
 
-    if (error.value)
-      throw createError({ message: error.value.message, statusCode: 401 });
-    if (!data.value)
-      throw createError({ message: "No Login data", statusCode: 401 });
+    if (!data) throw createError("Login Error: No data returned from supabase");
+    const validatedUser = userSchema.safeParse(data.user);
+    if (!validatedUser.success) {
+      // Handle validation error
+      throw createError(validatedUser.error);
+    }
 
-    console.log(data);
-    updateData(data.value.data);
+    const validatedSession = sessionSchema.safeParse(data.session);
+    if (!validatedSession.success) {
+      throw createError(validatedSession.error);
+    }
+
+    updateData({ user: validatedUser.data, session: validatedSession.data });
+    router.push("/astrotribe/users");
   };
 
-  async function setSession(client: SupabaseClient): Promise<boolean> {
+  async function handleInvalidEmailLink(userEmail: string) {
+    const { data, error } = await client.auth.resend({
+      type: "signup",
+      email: userEmail,
+    });
+    if (error) {
+      console.error("Error sending new verification email:", error);
+    }
+    console.log("New verification email sent!", data);
+    // provide feedback to user
+  }
+
+  // const requestPasswordReset = async (email: string): Promise<boolean> => {
+  //   return true
+  // }
+
+  // const resetPassword = async (confirmPassword: string, password: string): Promise<boolean> => {
+  //   return true
+  // }
+
+  async function setSession(): Promise<boolean> {
     // Update the session expiration time in your cookies if available from the auth response
-    console.log("setSession");
     const { data, error } = await client.auth.setSession({
       refresh_token: refreshToken.value!,
       access_token: accessToken.value!,
@@ -144,14 +174,12 @@ export default defineStore("auth", () => {
     if (!validatedData) {
       throw createError({ message: "Invalid session data", statusCode: 401 });
     }
-    console.log("setSession success");
     updateData(validatedData);
     return true;
   }
 
   const isAuthenticated = computed(() => {
-    console.log("isAuthenticated", user.value);
-    return user.value?.aud === AUTHENTICATED_AUD ? true : false;
+    return user.value?.aud === AUTHENTICATED_AUD;
   });
 
   const hasSessionExpired = computed(() => {
@@ -159,9 +187,13 @@ export default defineStore("auth", () => {
     return Number((Date.now() / 1000).toFixed(0)) >= expiresAt.value;
   });
 
-  const hasTokens = computed(() =>
-    Boolean(refreshToken.value && accessToken.value && expiresAt.value)
-  );
+  const hasTokens = computed(() => {
+    return Boolean(refreshToken.value && accessToken.value && expiresAt.value);
+  });
+
+  const hasSession = computed(() => {
+    return Boolean(session.value);
+  });
 
   const isFirstLogin = computed(() =>
     Boolean(
@@ -183,14 +215,18 @@ export default defineStore("auth", () => {
     accessToken,
     refreshToken,
     hasSessionExpired,
+    hasSession,
     hasTokens,
+    handleInvalidEmailLink,
     isProtectedRoute,
     session,
     setSession,
     login,
     logout,
     register,
-    createUsers,
+    // resetPassword,
+    // requestPasswordReset,
+    // createUsers,
     updateData,
     updateSession,
     updateUser,

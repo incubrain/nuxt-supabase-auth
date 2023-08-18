@@ -8,14 +8,14 @@ export const identitySchema = z.object({
     sub: z.string(),
   }),
   provider: z.string(),
-  last_sign_in_at: z.string().optional(),
+  last_sign_in_at: z.string(),
   created_at: z.string(),
   updated_at: z.string(),
 });
 
 export const emailUnvalidatedUserSchema = z.object({
   id: z.string(),
-  aud: z.literal("authenticated"),
+  aud: z.string(),
   role: z.string(),
   email: z.string().email(),
   phone: z.string().optional(),
@@ -25,29 +25,29 @@ export const emailUnvalidatedUserSchema = z.object({
     providers: z.array(z.string()),
   }),
   user_metadata: z.record(z.any()).optional(),
-  identities: z.array(identitySchema).optional(),
-  created_at: z.string(),
-  updated_at: z.string(),
+  identities: z.array(identitySchema),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export const userSchema = z.object({
   id: z.string(),
-  aud: z.literal("authenticated"),
-  role: z.string(),
-  email: z.string().email(),
+  aud: z.string(),
+  role: z.string().optional(),
+  email: z.string().email().optional(),
   email_confirmed_at: z.string().optional(),
   phone: z.string().optional(),
   confirmation_sent_at: z.string().optional(),
   confirmed_at: z.string().optional(),
   last_sign_in_at: z.string().optional(),
   app_metadata: z.object({
-    provider: z.string(),
-    providers: z.array(z.string()),
+    provider: z.string().optional(),
+    providers: z.array(z.string()).optional(),
   }),
   user_metadata: z.record(z.any()),
-  identities: z.array(identitySchema),
-  created_at: z.string(),
-  updated_at: z.string(),
+  identities: z.array(identitySchema).optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export const sessionSchema = z.object({

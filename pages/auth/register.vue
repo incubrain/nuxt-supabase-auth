@@ -1,39 +1,68 @@
 <template>
-  <div class="py-32">
-    <form
-      @submit.prevent="auth.register({ email, password })"
-      class="flex flex-col max-w-3xl mx-auto p-4 rounded-md bg-slate-100 gap-4"
+  <div class="flex flex-col items-center justify-center w-full h-full">
+    <h2 class="mb-6 text-2xl text-center">Register</h2>
+    <FormDynamic
+      :schema="schema"
+      :validation-schema="RegisterForm"
+      has-labels
+      button-label="Register"
+      class="w-full"
+      @submit-form="handleRegister"
+    />
+    <p class="mt-4 text-sm text-center">
+      <NuxtLink to="/auth/login"> Already have an account? Sign In </NuxtLink>
+    </p>
+    <!-- <UButton
+      class="flex items-center justify-center w-full gap-4 mt-6"
+      color="white"
+      @click="handleGoogleSignUp"
     >
-    <h1 class="text-xl font-semibold">Register</h1>
-      <input
-        v-model="email"
-        class="rounded-md p-2"
-        type="email"
-        name="email"
-        id="email"
-        placeholder="Email"
+      <NuxtImg
+        src="/icons/google.svg"
+        alt="Google Logo"
+        width="28px"
       />
-      <input
-        v-model="password"
-        class="rounded-md p-2"
-        type="password"
-        name="password"
-        id="password"
-        placeholder="Password"
-      />
-      <button type="submit">Register</button>
-    </form>
+      Sign Up with Google
+    </UButton> -->
   </div>
 </template>
 
 <script setup lang="ts">
-// !TODO: add form validation
-// !TODO: add feedback for register errors
-const email = ref("");
-const password = ref("");
+import { RegisterForm, FormField } from "@/types/forms";
 
 const auth = useAuthStore();
 
-</script>
+const schema = computed(() => {
+  return [
+    {
+      name: "email",
+      props: {
+        label: "Email",
+        type: "email",
+      },
+    },
+    {
+      name: "password",
+      props: {
+        label: "Password",
+        type: "password",
+      },
+    },
+    {
+      name: "confirmPassword",
+      props: {
+        label: "Confirm Password",
+        type: "password",
+      },
+    },
+  ] as FormField[];
+});
 
-<style scoped></style>
+function handleRegister(value: { email: string; password: string }) {
+  auth.register(value);
+}
+
+definePageMeta({
+  name: "Register",
+});
+</script>
