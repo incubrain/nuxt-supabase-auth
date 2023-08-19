@@ -9,20 +9,10 @@
       </p>
       <div class="space-x-2 py-4 w-auto">
         <UBadge>
-          <a
-            target="_blank"
-            href="https://mail.google.com/mail/u/0/"
-            rel="noopener noreferrer"
-            >Open Gmail</a
-          >
+          <a target="_blank" href="https://mail.google.com/mail/u/0/" rel="noopener noreferrer">Open Gmail</a>
         </UBadge>
         <UBadge>
-          <a
-            target="_blank"
-            href="https://outlook.live.com/mail/0/inbox"
-            rel="noopener noreferrer"
-            >Open Outlook</a
-          >
+          <a target="_blank" href="https://outlook.live.com/mail/0/inbox" rel="noopener noreferrer">Open Outlook</a>
         </UBadge>
       </div>
       <div></div>
@@ -36,12 +26,12 @@
 </template>
 
 <script setup lang="ts">
-const auth = useAuthStore();
-const { user } = storeToRefs(auth);
+const auth = useAuth()
+const user = useSupabaseUser()
 
 definePageMeta({
-  name: "Success",
-});
+  name: 'Success',
+})
 </script>
 
 <style scoped></style>

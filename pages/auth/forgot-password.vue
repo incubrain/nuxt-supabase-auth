@@ -13,28 +13,28 @@
 </template>
 
 <script setup lang="ts">
-import { ForgotPasswordForm, FormField } from "@/types/forms";
+import { ForgotPasswordForm, FormField } from '@/types/forms'
 
 const schema = computed(() => {
   return [
     {
-      name: "email",
-      width: "full",
+      name: 'email',
+      width: 'full',
       props: {
-        label: "Email",
-        type: "email",
+        label: 'Email',
+        type: 'email',
       },
     },
-  ] as FormField[];
-});
+  ] as FormField[]
+})
 
-const auth = useAuthStore();
+const auth = useAuth()
 
 const handleForgotPassword = (value: { email: string }) => {
   // auth.password.requestResetEmail(value.email)
-};
+}
 
 definePageMeta({
-  name: "ForgotPassword",
-});
+  name: 'ForgotPassword',
+})
 </script>

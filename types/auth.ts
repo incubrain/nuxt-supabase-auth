@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const identitySchema = z.object({
   id: z.string(),
@@ -11,7 +11,7 @@ export const identitySchema = z.object({
   last_sign_in_at: z.string(),
   created_at: z.string(),
   updated_at: z.string(),
-});
+})
 
 export const emailUnvalidatedUserSchema = z.object({
   id: z.string(),
@@ -28,7 +28,7 @@ export const emailUnvalidatedUserSchema = z.object({
   identities: z.array(identitySchema),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
-});
+})
 
 export const userSchema = z.object({
   id: z.string(),
@@ -48,32 +48,14 @@ export const userSchema = z.object({
   identities: z.array(identitySchema).optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
-});
-
-export const sessionSchema = z.object({
-  access_token: z.string(),
-  refresh_token: z.string(),
-  user: userSchema.optional(),
-  token_type: z.string(),
-  expires_in: z.number(),
-  expires_at: z.number().optional(),
-});
-
-export const authSchema = z.object({
-  user: userSchema,
-  session: sessionSchema,
-});
+})
 
 export const simpleUserSchema = z.object({
   email: z.string().email(),
   password: z.string(),
-});
+})
 
 // Infer the types
-export type AuthType = z.infer<typeof authSchema>;
-export type SimpleUserType = z.infer<typeof simpleUserSchema>;
-export type EmailUnvalidatedUserType = z.infer<
-  typeof emailUnvalidatedUserSchema
->;
-export type UserType = z.infer<typeof userSchema>;
-export type SessionType = z.infer<typeof sessionSchema>;
+export type SimpleUserType = z.infer<typeof simpleUserSchema>
+export type EmailUnvalidatedUserType = z.infer<typeof emailUnvalidatedUserSchema>
+export type UserType = z.infer<typeof userSchema>
