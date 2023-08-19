@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.32.0",
     "@types/node": "^18.17.1",
     "@vee-validate/zod": "^4.11.1",
+    "magic-regexp": "^0.7.0",
     "nuxt": "^3.6.5",
     "vee-validate": "^4.11.1",
     "zod": "^3.21.4"
