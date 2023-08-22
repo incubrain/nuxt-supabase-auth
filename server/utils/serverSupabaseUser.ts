@@ -2,7 +2,7 @@ import { User } from '@supabase/supabase-js'
 import type { H3Event } from 'h3'
 import { createError } from 'h3'
 
-export const serverSupabaseUser = async (event: H3Event): Promise<User | null> => {
+export default async function serverSupabaseUser(event: H3Event): Promise<User | null> {
   const client = await serverSupabaseClient(event)
 
   const {
