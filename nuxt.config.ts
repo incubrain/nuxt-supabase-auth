@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     dirs: ["stores", "data"],
   },
   runtimeConfig: {
+    SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
     public: {
       BASE_URL: process.env.BASE_URL,
       SUPABASE_KEY: process.env.SUPABASE_KEY,
