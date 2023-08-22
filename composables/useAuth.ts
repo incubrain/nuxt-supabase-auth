@@ -70,7 +70,6 @@ export default function useAuth() {
     login,
     logout,
     register,
-    updateSession,
     isLoggedIn,
   }
 }

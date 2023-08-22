@@ -65,33 +65,6 @@ const schema = computed(() => {
   ] as FormField[]
 })
 
-// const route = useRoute();
-// const router = useRouter();
-
-// const extractFromHash = (paramName: string) => {
-//   const regex = new RegExp("(?:[&]|^)" + paramName + "=([^&]*)");
-//   const match = route.hash.substring(1).match(regex); // Remove the '#' at the beginning of the hash
-//   return match ? decodeURIComponent(match[1]) : null;
-// };
-
-// watch(
-//   () => route.hash,
-//   (newHash: string) => {
-//     if (newHash.startsWith("#access_token")) {
-//       const session = {
-//         access_token: String(extractFromHash("access_token")),
-//         refresh_token: String(extractFromHash("refresh_token")),
-//         expires_in: Number(extractFromHash("expires_in")),
-//         token_type: String(extractFromHash("token_type")),
-//         type: String(extractFromHash("type")),
-//       };
-//       auth.updateSession(session);
-//       router.push("/protected/create-users");
-//     }
-//   },
-//   { immediate: true }
-// );
-
 definePageMeta({
   name: 'Login',
 })

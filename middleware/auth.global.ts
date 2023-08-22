@@ -3,11 +3,9 @@ const login = '/auth/login'
 
 const isExcluded = (to: string): boolean => {
   return excludedRoutes?.some((path): boolean => {
-    const regex = createRegExp(
-      exactly('^')
-        .and(oneOrMore(anyOf(path.replace(/\*/g, '.*'))))
-        .and('$')
-    )
+    const regex = new RegExp(`^${path.replace(/\*/g, '.*')}$`)
+
+    console.log('regex', regex, to, regex.test(to))
 
     return regex.test(to)
   })
