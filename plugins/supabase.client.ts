@@ -16,6 +16,7 @@ export default defineNuxtPlugin({
   enforce: 'pre', // Enforce the plugin to run before other plugins.
   async setup() {
     const env = useRuntimeConfig().public
+    const router = useRouter()
 
     if (!supabase) {
       // Initialize Supabase client if it's not already done.
@@ -45,6 +46,7 @@ export default defineNuxtPlugin({
         // If the user signed out, clear cookies.
         setCookiesNull()
         user.value = null
+        router.push('/auth/login')
       }
 
       // Only proceed if the event is 'SIGNED_IN' or 'TOKEN_REFRESHED', and a session exists.
