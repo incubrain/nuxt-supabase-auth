@@ -74,20 +74,15 @@ export default function useAdmin() {
     }
   }
 
-  async function updateMany() {
-    const users = [
-      {
-        body: 'created through service role',
-      },
-      {
-        body: 'created through service role 2',
-      },
-    ]
-    // update the user
+  async function uploadFile(file: File | null) {
+    if (!file) return console.log('no file selected')
     try {
-      const { data, error } = await useFetch('/api/admin/test-service', {
+      // Use FormData to send the file
+      const formData = new FormData()
+      formData.append('file', file)
+      const { data, error } = await useFetch('/api/admin/test-upload', {
         method: 'POST',
-        body: JSON.stringify(users),
+        body: formData,
       })
       if (error.value) {
         throw createError(`error updating users: ${error.value}`)
@@ -101,7 +96,7 @@ export default function useAdmin() {
   return {
     registerManyUsers,
     createPublicUsers,
-    updateMany,
+    uploadFile,
     createdUsers,
   }
 }

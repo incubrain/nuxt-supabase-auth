@@ -1,12 +1,5 @@
-import { createError } from 'h3'
-
 export default defineEventHandler(async (event) => {
   console.log('working service')
-  const adminUser = await serverSupabaseUser(event)
-
-  if (!adminUser) {
-    throw createError({ statusMessage: 'Admin user not found' })
-  }
   const users = await readBody(event)
   console.log('working service', users)
   const supabaseService = serverSupabaseServiceRole(event)

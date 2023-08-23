@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+    ADMIN_EMAILS: process.env.ADMIN_EMAILS,
     public: {
       BASE_URL: process.env.BASE_URL,
       SUPABASE_KEY: process.env.SUPABASE_KEY,
