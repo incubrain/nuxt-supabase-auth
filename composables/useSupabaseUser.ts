@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js'
 import { useState } from '#imports'
 
-export const useSupabaseUser = () => {
+export default function useSupabaseUser() {
   const supabase = useSupabaseClient()
 
   const user = useState<User | null>('supabase_user', () => null)

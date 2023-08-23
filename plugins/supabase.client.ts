@@ -43,7 +43,8 @@ export default defineNuxtPlugin({
 
       if (event === EVENTS.SIGNED_OUT) {
         // If the user signed out, clear cookies.
-        return setCookiesNull()
+        setCookiesNull()
+        user.value = null
       }
 
       // Only proceed if the event is 'SIGNED_IN' or 'TOKEN_REFRESHED', and a session exists.
