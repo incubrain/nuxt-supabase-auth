@@ -1,11 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@pinia/nuxt", "@nuxthq/ui", "magic-regexp/nuxt"],
+  modules: ['@pinia/nuxt', '@nuxthq/ui', 'magic-regexp/nuxt', '@nuxt/image'],
   pinia: {
-    autoImports: ["storeToRefs", "defineStore"],
+    autoImports: ['storeToRefs', 'defineStore'],
   },
   imports: {
-    dirs: ["stores", "data"],
+    dirs: ['stores', 'data'],
   },
   runtimeConfig: {
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
@@ -19,4 +19,4 @@ export default defineNuxtConfig({
       TEST_MODE: process.env.TEST_MODE,
     },
   },
-});
+})
