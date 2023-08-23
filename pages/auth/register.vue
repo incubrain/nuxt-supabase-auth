@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center w-full h-full">
+  <div>
     <h2 class="mb-6 text-2xl text-center">Register</h2>
     <FormDynamic
       :schema="schema"

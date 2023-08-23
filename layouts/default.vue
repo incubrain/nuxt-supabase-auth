@@ -1,21 +1,18 @@
 <template>
-  <div>
+  <div class="flex flex-col h-screen overflow-hidden">
     <NavTop />
-    <div class="fixed bottom-2 left-2 rounded-md bg-emerald-500 flex gap-8 px-4 py-2 max-w-[80vw]">
-      <p class="text-white font-bold">User: {{ user?.email || 'no user' }}</p>
-      <p class="text-white font-bold">Session: {{ auth.isLoggedIn }}</p>
-    </div>
-    <div class="max-w-[600px] flex justify-start items-center h-full">
-      <slot />
+    <div class="flex-grow flex relative p-4 lg:p-8">
+      <UCard class="h-full flex justify-center items-center relative min-w-[480px] max-w-[540px] z-10">
+        <slot />
+      </UCard>
+      <div class="absolute left-0 top-0 w-full h-full m-0">
+        <NuxtImg src="/auth.jpg" alt="Authentication Image" fit="fill" class="w-full h-full" />
+      </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-const router = useRouter()
 
-const auth = useAuth()
-const user = useSupabaseUser()
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col items-center justify-center w-full h-full">
-    <h2 class="mb-6 text-2xl text-center">Forgot Your Password? test</h2>
+    <h2 class="mb-6 text-2xl text-center">Forgot Your Password?</h2>
     <FormDynamic
       :schema="schema"
       :validation-schema="ForgotPasswordForm"
       has-labels
       button-label="Request Reset Email"
       class="w-full"
-      @submit-form="auth.requestPasswordReset"
+      @submit-form="auth.forgotPassword"
     />
   </div>
 </template>
@@ -29,10 +29,6 @@ const schema = computed(() => {
 })
 
 const auth = useAuth()
-
-const handleForgotPassword = (value: { email: string }) => {
-  // auth.password.requestResetEmail(value.email)
-}
 
 definePageMeta({
   name: 'ForgotPassword',

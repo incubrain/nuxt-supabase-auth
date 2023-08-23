@@ -3,27 +3,20 @@
     <h2 class="mb-6 text-2xl text-center"> Reset Password </h2>
     <FormDynamic
       :schema="schema"
-      :validation-schema="ResetPasswordForm"
+      :validation-schema="UpdatePasswordForm"
       has-labels
       button-label="Reset Password"
       class="w-full"
-      @submit-form="auth.resetPassword"
+      @submit-form="auth.updatePassword"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ResetPasswordForm, FormField } from '@/types/forms'
+import { UpdatePasswordForm, FormField } from '@/types/forms'
 
 const auth = useAuth()
 const router = useRouter()
-
-const handleResetPassword = (value: { password: string; confirmPassword: string }) => {
-  // Get the user token from the URL
-  // if (value.password === value.confirmPassword) {
-  //   auth.password.update(value.password)
-  // }
-}
 
 const schema = computed(() => {
   return [
