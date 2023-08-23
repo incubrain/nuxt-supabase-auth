@@ -32,6 +32,38 @@ export default function useAuth() {
     }
   }
 
+  const forgotPassword = async ({ email }: { email: string }) => {
+    //  sends a reset email to the user
+    console.log('forgotPassword', email, `${env.BASE_URL}/auth/update-password`)
+    const { data, error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: `${env.BASE_URL}/auth/update-password`,
+    })
+    if (error) {
+      throw createError({
+        statusCode: 401,
+        message: error.message,
+      })
+    }
+
+    // user feedback
+  }
+
+  const updatePassword = async ({ newPassword }: { newPassword: string }) => {
+    if (!user) throw createError('No user found')
+    //  sends a reset email to the user
+    const { data, error } = await client.auth.updateUser({
+      password: newPassword,
+    })
+    if (data) alert('Password updated successfully!')
+    if (error) alert('There was an error updating your password.')
+    if (error) {
+      throw createError({
+        statusCode: 401,
+        message: error.message,
+      })
+    }
+  }
+
   const isLoggedIn = computed(() => user.value !== null)
 
   const login = async ({ email, password }: { email: string; password: string }) => {
@@ -70,6 +102,8 @@ export default function useAuth() {
     login,
     logout,
     register,
+    forgotPassword,
+    updatePassword,
     isLoggedIn,
   }
 }

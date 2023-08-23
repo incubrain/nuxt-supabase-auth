@@ -36,6 +36,7 @@ export default defineNuxtPlugin({
 
     supabase.auth.onAuthStateChange(async (event, session) => {
       // Update the user value if the session's user differs from the current one.
+      console.log('onAuthStateChange', event, session)
       if (!session) {
         user.value = null
       } else if (JSON.stringify(user.value) !== JSON.stringify(session.user)) {

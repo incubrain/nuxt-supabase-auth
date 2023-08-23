@@ -16,7 +16,6 @@
 import { UpdatePasswordForm, FormField } from '@/types/forms'
 
 const auth = useAuth()
-const router = useRouter()
 
 const schema = computed(() => {
   return [
@@ -38,6 +37,6 @@ const schema = computed(() => {
 })
 
 definePageMeta({
-  name: "ResetPassword",
+  name: "UpdatePassword",
 });
 </script>
