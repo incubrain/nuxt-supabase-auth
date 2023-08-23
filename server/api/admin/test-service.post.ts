@@ -1,11 +1,7 @@
 export default defineEventHandler(async (event) => {
-  console.log('working service')
   const users = await readBody(event)
   console.log('working service', users)
   const supabaseService = serverSupabaseServiceRole(event)
-  if (!supabaseService) {
-    throw createError({ statusMessage: 'Supabase client not found' })
-  }
 
   const { data, error } = await supabaseService.from('users').insert(users)
 

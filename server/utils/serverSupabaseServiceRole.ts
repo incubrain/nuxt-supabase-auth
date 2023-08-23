@@ -27,5 +27,6 @@ export default function serverSupabaseServiceRole <T>(event: H3Event): SupabaseC
     event.context._supabaseServiceRole = supabaseClient
   }
 
+  if (!event.context._supabaseServiceRole) throw createError({ statusMessage: 'Supabase client not found' })
   return event.context._supabaseServiceRole as SupabaseClient<T>
 }
